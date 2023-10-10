@@ -1,0 +1,444 @@
+{
+  "transaction_details":[
+     {
+        "transaction_info":{
+           "paypal_account_id":"XAM3CBWQGBC9A",
+           "transaction_id":"2MU851726C673203A",
+           "transaction_event_code":"T0000",
+           "transaction_initiation_date":"2023-10-02T01:53:07+0000",
+           "transaction_updated_date":"2023-10-02T01:53:07+0000",
+           "transaction_amount":{
+              "currency_code":"USD",
+              "value":"200.00"
+           },
+           "fee_amount":{
+              "currency_code":"USD",
+              "value":"-7.47"
+           },
+           "transaction_status":"S",
+           "transaction_note":"Annual Membership Fee",
+           "ending_balance":{
+              "currency_code":"USD",
+              "value":"1088.81"
+           },
+           "available_balance":{
+              "currency_code":"USD",
+              "value":"1088.81"
+           },
+           "protection_eligibility":"01"
+        },
+        "payer_info":{
+           "account_id":"XAM3CBWQGBC9A",
+           "email_address":"sb-wkisq27632335@business.example.com",
+           "address_status":"N",
+           "payer_status":"N",
+           "payer_name":{
+              "alternate_full_name":"Test Store"
+           },
+           "country_code":"US"
+        },
+        "shipping_info":{
+           "name":"Mohamed, Mohidheen",
+           "address":{
+              "line1":"8202 Main St",
+              "city":"Ellicott City",
+              "state":"MD",
+              "country_code":"US",
+              "postal_code":"21043"
+           }
+        },
+        "cart_info":{
+           
+        },
+        "store_info":{
+           
+        },
+        "auction_info":{
+           
+        },
+        "incentive_info":{
+           
+        }
+     },
+     {
+        "transaction_info":{
+           "paypal_account_id":"XAM3CBWQGBC9A",
+           "transaction_id":"5KT851172P093974J",
+           "transaction_event_code":"T0000",
+           "transaction_initiation_date":"2023-10-02T01:53:35+0000",
+           "transaction_updated_date":"2023-10-02T01:53:35+0000",
+           "transaction_amount":{
+              "currency_code":"USD",
+              "value":"100.00"
+           },
+           "fee_amount":{
+              "currency_code":"USD",
+              "value":"-3.98"
+           },
+           "transaction_status":"S",
+           "transaction_note":"Sadaqah",
+           "ending_balance":{
+              "currency_code":"USD",
+              "value":"1184.83"
+           },
+           "available_balance":{
+              "currency_code":"USD",
+              "value":"1184.83"
+           },
+           "protection_eligibility":"01"
+        },
+        "payer_info":{
+           "account_id":"XAM3CBWQGBC9A",
+           "email_address":"sb-wkisq27632335@business.example.com",
+           "address_status":"N",
+           "payer_status":"N",
+           "payer_name":{
+              "alternate_full_name":"Test Store"
+           },
+           "country_code":"US",
+           "address":{
+            "line1":"8202 Main St",
+            "line2":"Suite 1",
+            "city":"Ellicott City",
+            "state":"MD",
+            "country_code":"US",
+            "postal_code":"21043"
+         }
+        },
+        "shipping_info":{
+           "name":"Mohamed, Mohidheen",
+           "address":{
+              "line1":"8202 Main St",
+              "city":"Ellicott City",
+              "state":"MD",
+              "country_code":"US",
+              "postal_code":"21043"
+           }
+        },
+        "cart_info":{
+           
+        },
+        "store_info":{
+           
+        },
+        "auction_info":{
+           
+        },
+        "incentive_info":{
+           
+        }
+     },
+     {
+        "transaction_info":{
+           "paypal_account_id":"XAM3CBWQGBC9A",
+           "transaction_id":"8CG64376J5571481H",
+           "transaction_event_code":"T0000",
+           "transaction_initiation_date":"2023-10-02T01:54:01+0000",
+           "transaction_updated_date":"2023-10-02T01:54:01+0000",
+           "transaction_amount":{
+              "currency_code":"USD",
+              "value":"500.00"
+           },
+           "fee_amount":{
+              "currency_code":"USD",
+              "value":"-17.94"
+           },
+           "transaction_status":"S",
+           "transaction_note":"Zakat",
+           "ending_balance":{
+              "currency_code":"USD",
+              "value":"1666.89"
+           },
+           "available_balance":{
+              "currency_code":"USD",
+              "value":"1666.89"
+           },
+           "protection_eligibility":"01"
+        },
+        "payer_info":{
+           "account_id":"XAM3CBWQGBC9A",
+           "email_address":"sb-wkisq27632335@business.example.com",
+           "address_status":"N",
+           "payer_status":"N",
+           "payer_name":{
+              "alternate_full_name":"Test Store"
+           },
+           "country_code":"US"
+        },
+        "shipping_info":{
+           "name":"Mohamed, Mohidheen",
+           "address":{
+              "line1":"8202 Main St",
+              "city":"Ellicott City",
+              "state":"MD",
+              "country_code":"US",
+              "postal_code":"21043"
+           }
+        },
+        "cart_info":{
+           
+        },
+        "store_info":{
+           
+        },
+        "auction_info":{
+           
+        },
+        "incentive_info":{
+           
+        }
+     },
+     {
+        "transaction_info":{
+           "paypal_account_id":"U8PK5FV5HV9RG",
+           "transaction_id":"53D89265BJ895580S",
+           "transaction_event_code":"T0000",
+           "transaction_initiation_date":"2023-10-02T01:55:26+0000",
+           "transaction_updated_date":"2023-10-02T01:55:26+0000",
+           "transaction_amount":{
+              "currency_code":"USD",
+              "value":"200.00"
+           },
+           "fee_amount":{
+              "currency_code":"USD",
+              "value":"-7.47"
+           },
+           "transaction_status":"S",
+           "transaction_note":"Annual Membership Fee",
+           "ending_balance":{
+              "currency_code":"USD",
+              "value":"1859.42"
+           },
+           "available_balance":{
+              "currency_code":"USD",
+              "value":"1859.42"
+           },
+           "protection_eligibility":"01"
+        },
+        "payer_info":{
+           "account_id":"U8PK5FV5HV9RG",
+           "email_address":"sb-5f1un27512142@personal.example.com",
+           "address_status":"N",
+           "payer_status":"N",
+           "payer_name":{
+              "given_name":"John",
+              "surname":"Doe",
+              "alternate_full_name":"John Doe"
+           },
+           "country_code":"US"
+        },
+        "shipping_info":{
+           "name":"John, Doe",
+           "address":{
+              "line1":"1 Main St",
+              "line2":"Apt 2",
+              "city":"San Jose",
+              "state":"CA",
+              "country_code":"US",
+              "postal_code":"95131"
+           }
+        },
+        "cart_info":{
+           
+        },
+        "store_info":{
+           
+        },
+        "auction_info":{
+           
+        },
+        "incentive_info":{
+           
+        }
+     },
+     {
+        "transaction_info":{
+           "paypal_account_id":"U8PK5FV5HV9RG",
+           "transaction_id":"48R3353440449964T",
+           "transaction_event_code":"T0000",
+           "transaction_initiation_date":"2023-10-02T01:55:56+0000",
+           "transaction_updated_date":"2023-10-02T01:55:56+0000",
+           "transaction_amount":{
+              "currency_code":"USD",
+              "value":"300.00"
+           },
+           "fee_amount":{
+              "currency_code":"USD",
+              "value":"-10.96"
+           },
+           "transaction_status":"S",
+           "transaction_note":"Zakat",
+           "ending_balance":{
+              "currency_code":"USD",
+              "value":"2148.46"
+           },
+           "available_balance":{
+              "currency_code":"USD",
+              "value":"2148.46"
+           },
+           "protection_eligibility":"01"
+        },
+        "payer_info":{
+           "account_id":"U8PK5FV5HV9RG",
+           "email_address":"sb-5f1un27512142@personal.example.com",
+           "address_status":"N",
+           "payer_status":"N",
+           "payer_name":{
+              "given_name":"John",
+              "surname":"Doe",
+              "alternate_full_name":"John Doe"
+           },
+           "country_code":"US"
+        },
+        "shipping_info":{
+           "name":"John, Doe",
+           "address":{
+              "line1":"1 Main St",
+              "city":"San Jose",
+              "state":"CA",
+              "country_code":"US",
+              "postal_code":"95131"
+           }
+        },
+        "cart_info":{
+           
+        },
+        "store_info":{
+           
+        },
+        "auction_info":{
+           
+        },
+        "incentive_info":{
+           
+        }
+     },
+     {
+        "transaction_info":{
+           "paypal_account_id":"U8PK5FV5HV9RG",
+           "transaction_id":"156348698W424334B",
+           "paypal_reference_id":"48R3353440449964T",
+           "paypal_reference_id_type":"TXN",
+           "transaction_event_code":"T1107",
+           "transaction_initiation_date":"2023-10-02T01:57:18+0000",
+           "transaction_updated_date":"2023-10-02T01:57:18+0000",
+           "transaction_amount":{
+              "currency_code":"USD",
+              "value":"-100.00"
+           },
+           "transaction_status":"S",
+           "ending_balance":{
+              "currency_code":"USD",
+              "value":"2048.46"
+           },
+           "available_balance":{
+              "currency_code":"USD",
+              "value":"2048.46"
+           },
+           "protection_eligibility":"02"
+        },
+        "payer_info":{
+           "account_id":"U8PK5FV5HV9RG",
+           "email_address":"sb-5f1un27512142@personal.example.com",
+           "address_status":"N",
+           "payer_status":"N",
+           "payer_name":{
+              "given_name":"John",
+              "surname":"Doe",
+              "alternate_full_name":"John Doe"
+           },
+           "country_code":"US"
+        },
+        "shipping_info":{
+           "name":"John, Doe"
+        },
+        "cart_info":{
+           
+        },
+        "store_info":{
+           
+        },
+        "auction_info":{
+           
+        },
+        "incentive_info":{
+           
+        }
+     },
+     {
+        "transaction_info":{
+           "paypal_account_id":"XAM3CBWQGBC9A",
+           "transaction_id":"5DU29070YJ465493V",
+           "transaction_event_code":"T0000",
+           "transaction_initiation_date":"2023-10-02T13:32:46+0000",
+           "transaction_updated_date":"2023-10-02T13:32:46+0000",
+           "transaction_amount":{
+              "currency_code":"USD",
+              "value":"50.00"
+           },
+           "fee_amount":{
+              "currency_code":"USD",
+              "value":"-2.24"
+           },
+           "transaction_status":"S",
+           "transaction_note":"Sadaqah",
+           "ending_balance":{
+              "currency_code":"USD",
+              "value":"2096.22"
+           },
+           "available_balance":{
+              "currency_code":"USD",
+              "value":"2096.22"
+           },
+           "protection_eligibility":"01"
+        },
+        "payer_info":{
+           "account_id":"XAM3CBWQGBC9A",
+           "email_address":"sb-wkisq27632335@business.example.com",
+           "address_status":"N",
+           "payer_status":"N",
+           "payer_name":{
+              "alternate_full_name":"Test Store"
+           },
+           "country_code":"US"
+        },
+        "shipping_info":{
+           "name":"Mohamed, Mohidheen",
+           "address":{
+              "line1":"8202 Main St",
+              "line2":"Suite 1",
+              "city":"Ellicott City",
+              "state":"MD",
+              "country_code":"US",
+              "postal_code":"21043"
+           }
+        },
+        "cart_info":{
+           
+        },
+        "store_info":{
+           
+        },
+        "auction_info":{
+           
+        },
+        "incentive_info":{
+           
+        }
+     }
+  ],
+  "account_number":"K9GMNS5J4PASA",
+  "start_date":"2023-10-01T00:00:00+0000",
+  "end_date":"2023-10-04T08:59:59+0000",
+  "last_refreshed_datetime":"2023-10-04T08:59:59+0000",
+  "page":1,
+  "total_items":7,
+  "total_pages":1,
+  "links":[
+     {
+        "href":"https://api.sandbox.paypal.com/v1/reporting/transactions?fields=transaction_info%2Cpayer_info%2Cshipping_info%2Cauction_info%2Ccart_info%2Cincentive_info%2Cstore_info&start_date=2023-10-01T00%3A00%3A00.000Z&end_date=2023-10-04T23%3A59%3A59.999Z&page_size=100&page=1",
+        "rel":"self",
+        "method":"GET"
+     }
+  ]
+}
