@@ -1,5 +1,21 @@
 public with sharing class PayPalDataProcessorQueueable implements Queueable{
 
+    public String accountRecordTypeId {
+        get {
+            Id accountRecordTypeId = !String.isEmpty(Salesforce_PayPal_Transaction_Settings__mdt.getInstance('AccountRecordTypeDeveloperName').Value__c) ? Schema.SObjectType.Account.getRecordTypeInfosByDeveloperName().get(Salesforce_PayPal_Transaction_Settings__mdt.getInstance('AccountRecordTypeDeveloperName').Value__c).getRecordTypeId() : null;
+            return accountRecordTypeId;
+        }
+        set;
+    }
+
+    public String contactRecordTypeId {
+        get {
+            Id contactRecordTypeId = !String.isEmpty(Salesforce_PayPal_Transaction_Settings__mdt.getInstance('ContactRecordTypeDeveloperName').Value__c) ? Schema.SObjectType.Account.getRecordTypeInfosByDeveloperName().get(Salesforce_PayPal_Transaction_Settings__mdt.getInstance('ContactRecordTypeDeveloperName').Value__c).getRecordTypeId() : null;
+            return contactRecordTypeId;
+        }
+        set;
+    }
+
     public PayPalTransactionData transactionData {get; set;}
 
     public PayPalDataProcessorQueueable(PayPalTransactionData tData) {
@@ -32,7 +48,7 @@ public with sharing class PayPalDataProcessorQueueable implements Queueable{
             accountsMap.put(a.External_Id__c, a);
         }
         Map<String, Contact> contactsMap = new Map<String, Contact>();
-        for (Contact c : [SELECT Id, External_Id__c, AccountId FROM Contact WHERE External_Id__c IN :contactIdentifiers]){
+        for (Contact c : [SELECT Id, External_Id__c, AccountId, LastName FROM Contact WHERE External_Id__c IN :contactIdentifiers]){
             contactsMap.put(c.External_Id__c, c);
         }
         Map<String, PayPal_Transaction__c> paypalTransactionssMap = new Map<String, PayPal_Transaction__c>();
@@ -51,6 +67,7 @@ public with sharing class PayPalDataProcessorQueueable implements Queueable{
                     if(wrapper.contacts.get(getContactIdentifier(trans)) == null) {
                         if(contactsMap.get(getContactIdentifier(trans)) == null) {
                             c = getContact(trans);
+                            if(!String.isEmpty(contactRecordTypeId)) {c.put('RecordTypeId', contactRecordTypeId); }
                             wrapper.contacts.put(getContactIdentifier(trans), c);
                         } else {
                             c =  contactsMap.get(getContactIdentifier(trans));
@@ -63,6 +80,7 @@ public with sharing class PayPalDataProcessorQueueable implements Queueable{
                             a.Name = c.LastName + '\'s Household';
                             a.External_Id__c = getAccountIdentifier(trans);
                             a = getAccountAddress(a, trans);
+                            if(!String.isEmpty(accountRecordTypeId)) {a.put('RecordTypeId', accountRecordTypeId);}
                             wrapper.households.put(getAccountIdentifier(trans), a);
                         } else {
                             a = accountsMap.get(getAccountIdentifier(trans));
@@ -185,7 +203,7 @@ public with sharing class PayPalDataProcessorQueueable implements Queueable{
         a = getAccountAddress(a, trans);
         String billingAddress = a.BillingStreet + a.BillingCity + a.BillingState + a.BillingCountry + a.BillingPostalCode;
         String shippingAddress = a.ShippingStreet + a.ShippingCity + a.ShippingState + a.ShippingCountry + a.ShippingPostalCode;
-        String identifier = !String.isBlank(billingAddress) ? billingAddress : !String.isBlank(shippingAddress) ? shippingAddress : '';
+        String identifier = !String.isBlank(shippingAddress) ? shippingAddress : !String.isBlank(billingAddress) ? billingAddress : '';
         identifier = identifier.length() > 255 ? identifier.substring(0, 244) : identifier;
         if (String.isBlank(identifier)) {
             identifier = getContactIdentifier(trans);

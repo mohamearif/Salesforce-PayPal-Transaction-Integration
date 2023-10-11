@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>PageSize_Should_Be_Number</fullName>
+    <active>true</active>
+    <description>PageSize should be a number</description>
+    <errorConditionFormula>IF( DeveloperName == &apos;PageSize&apos;,
+IF(ISNUMBER(Value__c), false, true),
+false)</errorConditionFormula>
+    <errorDisplayField>Value__c</errorDisplayField>
+    <errorMessage>PageSize should be a number</errorMessage>
+</ValidationRule>
