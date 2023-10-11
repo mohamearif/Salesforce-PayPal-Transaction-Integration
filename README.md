@@ -27,7 +27,7 @@ Below outlines the steps for integrating PayPal Transactions into Salesforce Obj
 Begin by cloning this project and opening the project directory in Visual Studio Code (VSCODE).
 
 ```shell
-git clone <repository-url>
+git clone https://github.com/mohamearif/Salesforce-PayPal-Transaction-Integration.git
 cd <project-directory>
 ```
 
