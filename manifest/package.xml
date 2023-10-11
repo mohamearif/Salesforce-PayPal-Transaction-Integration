@@ -55,6 +55,7 @@
     </types>
     <types>
         <members>PayPal_Transaction__c-PayPal Transaction Layout</members>
+        <members>Salesforce_PayPal_Transaction_Settings__mdt-PayPal Transaction Integration Setting Layout</members>
         <name>Layout</name>
     </types>
     <types>
