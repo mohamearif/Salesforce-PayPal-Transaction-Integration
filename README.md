@@ -47,7 +47,7 @@ sfdx force:source:deploy --manifest manifest/package.xml -l RunSpecifiedTests -r
 ```
 ### Step 4: Schedule the Data Retrieval
 
-After deploying the integration, run the post-deployment script to schedule the PayPalDataScheduler Apex Class to run automatically every day at 3 AM. Please take a look at the PostDeploymentScript apex script and update according to your need.
+After deploying the integration, run the post-deployment script to schedule the PayPalDataScheduler Apex Class to run automatically every day at 3 AM and also for adding 'PayPal_Data_Permissions' Permission Set to all system adminstrator users. Please take a look at the PostDeploymentScript apex script and update according to your need.
 
 ```shell
 sfdx force:apex:execute -f scripts/apex/PostDeploymentScript.apex
