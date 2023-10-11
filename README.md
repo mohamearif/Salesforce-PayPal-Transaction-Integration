@@ -57,7 +57,7 @@ This step ensures that the data retrieval process is automated, and your integra
 
 ### Step 5: Named Credential Update
 
-Update the namedCredential 'PayPal_Named_Credential' with YOUR_PAYPAL_ACCOUNT_CLIENT_ID and YOUR_PAYPAL_ACCOUNT_CLIENT_SECRET from your paypal sandbox
+Update the namedCredential 'PayPal_Named_Credential' with YOUR_PAYPAL_ACCOUNT_CLIENT_ID and YOUR_PAYPAL_ACCOUNT_CLIENT_SECRET from your paypal sandbox. Please sure on PayPal REST API App that it has access to Transactions.
 
 If you encounter any issues or have specific customization requirements, refer to the PayPalDataProcessorQueueable, PayPalDataScheduler & PayPalDataExportQueueable Apex classes for further adjustments.
 
