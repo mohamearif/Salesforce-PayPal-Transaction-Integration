@@ -61,6 +61,15 @@ Update the namedCredential 'PayPal_Named_Credential' with YOUR_PAYPAL_ACCOUNT_CL
 
 If you encounter any issues or have specific customization requirements, refer to the PayPalDataProcessorQueueable, PayPalDataScheduler & PayPalDataExportQueueable Apex classes for further adjustments.
 
-### Step 6: Permission
+### Step 6: Permission and Configuration
 
-Assign the 'PayPal_Data_Permissions' permission set to the user who needs to access the PayPal_Transaction__c records.
+1. Assign the 'PayPal_Data_Permissions' permission set to the user who needs to access the PayPal_Transaction__c tab/records.
+2. Visit manage records on custom metadata type 'Salesforce_PayPal_Transaction_Settings__mdt' to customize few of the settings such as 
+
+    a. AccountRecordTypeDeveloperName - To set a specific Account Record Type while the Account records are created while exporting PayPal Transactions to Salesforce.
+
+    b. ContactRecordTypeDeveloperName - To set a specific Contact Record Type while the Contact records are created while exporting PayPal Transactions to Salesforce.
+
+    c. ExcludeAccountContact - Avoid creating accounts and contacts while exporting PayPal Transactions to Salesforce.
+
+    d. PageSize - Setting the PageSize of the export per API call on the Queueable Apex.
