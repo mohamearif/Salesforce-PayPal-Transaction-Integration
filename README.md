@@ -1,8 +1,8 @@
 # Salesforce PayPal Transactions Integration
 
-This Package enables the salesforce orgs to be integrated with PayPal Transactions API endpoint 'https://developer.paypal.com/docs/api/transaction-search/v1/#search_get' asyncournously using Scheduled Queueable Apex. 
+This is light-weight outbound integration from Salesforce and PayPal via Scheduled and Queueable Apex to asynchronously pull transactions from PayPal's Transactions REST API endpoint 'https://developer.paypal.com/docs/api/transaction-search/v1/#search_get' into Salesforce custom object 'PayPal_Transaction__c' as records. 
 
-Below outlines the steps for integrating PayPal Transactions into Salesforce Object: PayPal_Transaction__c, while providing options to create Accounts and Contacts and associating them with the PayPal_Transaction__c records (Custom Metadate controlled: Salesforce_PayPal_Transaction_Settings.ExcludeAccountContact). Then PayPal_Transaction__c records could be used to trigger/flow data into your object/custom logic based on your unique need.
+Below outlines the steps for integrating PayPal Transactions into Salesforce Custom Object: PayPal_Transaction__c records, while providing options to create Accounts and Contacts and associating them with the PayPal_Transaction__c records (Custom Metadate controlled: Salesforce_PayPal_Transaction_Settings.ExcludeAccountContact). Then PayPal_Transaction__c records could be used to trigger/flow data into your object/custom logic based on your unique need.
 
 ## IMPORTANT NOTES
 
