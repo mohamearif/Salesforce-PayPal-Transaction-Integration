@@ -39,6 +39,8 @@
     </types>
     <types>
         <name>CustomMetadata</name>
+        <members>Salesforce_PayPal_Transaction_Settings.AccountRecordTypeDeveloperName</members>
+        <members>Salesforce_PayPal_Transaction_Settings.ContactRecordTypeDeveloperName</members>
         <members>Salesforce_PayPal_Transaction_Settings.ExcludeAccountContact</members>
         <members>Salesforce_PayPal_Transaction_Settings.PageSize</members>
     </types>
