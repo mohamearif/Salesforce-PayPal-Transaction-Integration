@@ -17,7 +17,7 @@ if (EveryDay3AMJob.isEmpty()) {
 //Adding Permission Set 'PayPal_Data_Permissions' for all system adminstrator users
 String permissionSetName = 'PayPal_Data_Permissions';
 Id permissionSetId = [SELECT Id FROM PermissionSet WHERE Name = :permissionSetName LIMIT 1].Id;
-List<User> sysAdminUsers = [SELECT Id FROM User WHERE IsActive = true AND Profile.Name = 'System Administrator'];
+List<User> sysAdminUsers = [SELECT Id FROM User WHERE IsActive = true AND Profile.Name = 'System Administrator' and Id NOT IN (Select AssigneeId FROM PermissionSetAssignment WHERE PermissionSetId = :permissionSetId)];
 List<PermissionSetAssignment> assignmentsToInsert = new List<PermissionSetAssignment>();
 for (User user : sysAdminUsers) {
     PermissionSetAssignment assignment = new PermissionSetAssignment();
