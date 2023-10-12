@@ -1,81 +1,94 @@
 # Salesforce PayPal Transactions Integration
 
-This is a light-weight outbound integration from Salesforce to PayPal via Scheduled and Queueable Apex to asynchronously pull transactions from PayPal's Transactions REST API endpoint 'https://developer.paypal.com/docs/api/transaction-search/v1/#search_get' to push it into Salesforce custom object 'PayPal_Transaction__c' as records. 
+This repository provides a lightweight outbound integration from Salesforce to PayPal using Scheduled and Queueable Apex. It asynchronously retrieves transactions from PayPal's Transactions REST API endpoint [here](https://developer.paypal.com/docs/api/transaction-search/v1/#search_get) and pushes them into a Salesforce custom object called 'PayPal_Transaction__c' as records.
 
-Below outlines the steps for integrating PayPal Transactions into Salesforce Custom Object: PayPal_Transaction__c records, while providing options to create Accounts and Contacts and associating them with the PayPal_Transaction__c records (Custom Metadate controlled: Salesforce_PayPal_Transaction_Settings.ExcludeAccountContact). Then PayPal_Transaction__c records could be used to trigger/flow data into your object/custom logic based on your unique need.
+## Table of Contents
 
-## IMPORTANT NOTES
+- [Important Notes](#important-notes)
+- [Helpful Tips and Considerations](#helpful-tips-and-considerations)
+- [Getting Started](#getting-started)
+  - [Step 1: Clone the Project and Open in Visual Studio Code](#step-1-clone-the-project-and-open-in-visual-studio-code)
+  - [Step 2: Enable Custom Address Field in Salesforce Org](#step-2-enable-custom-address-field-in-salesforce-org)
+  - [Step 3: Deploy the Integration](#step-3-deploy-the-integration)
+  - [Step 4: Schedule the Data Retrieval](#step-4-schedule-the-data-retrieval)
+  - [Step 5: Named Credential Update](#step-5-named-credential-update)
+  - [Step 6: Permission and Configuration](#step-6-permission-and-configuration)
+  - [Step 7: Existing Data Export (Optional)](#step-7-existing-data-export-optional)
 
-1. Please update the namedCredential 'PayPal_Named_Credential' with YOUR_PAYPAL_ACCOUNT_CLIENT_ID and YOUR_PAYPAL_ACCOUNT_CLIENT_SECRET from your paypal sandbox
+## Important Notes
 
-2. After successfull testing with PayPal/Salesforce Sandbox, while moving forward production please update the endpoint url to Production PayPay URL: https://api-m.paypal.com on NamedCredential 'PayPal_Named_Credential' and also update the PayPal_Named_Credential with PayPal Production ClientId and Client Secret.
+1. **Update Named Credential**: Update the named credential 'PayPal_Named_Credential' with your PayPal account client ID and client secret from your PayPal sandbox.
+
+2. **Production Environment**: After successful testing in the sandbox, update the endpoint URL to the production PayPal URL ('https://api-m.paypal.com') on the 'PayPal_Named_Credential' and provide your PayPal production client ID and client secret.
 
 ## Helpful Tips and Considerations
 
-1. **Account Deduplication:** Account records are matched and deduplicated based on the address on the PayPal transaction.
+1. **Account Deduplication**: Account records are matched and deduplicated based on the address in the PayPal transaction.
 
-2. **Contact Deduplication:** Contacts are matched and deduplicated based on the FirstName, LastName, and Email.
+2. **Contact Deduplication**: Contacts are matched and deduplicated based on the first name, last name, and email.
 
-3. **Data Retrieval:** The PayPalDataScheduler needs to be scheduled to retrieve the records from the previous day, starting at 12 AM and ending at 11:59 PM.
+3. **Data Retrieval**: The `PayPalDataScheduler` should be scheduled to retrieve records from the previous day, starting at 12 AM and ending at 11:59 PM.
 
-4. **Customization:** All of the above logic is implemented in the Apex classes PayPalDataExportQueueable, PayPalDataProcessorQueueable & PayPalDataScheduler can be modified to suit your specific requirements.
+4. **Customization**: The logic is implemented in the following Apex classes: `PayPalDataExportQueueable`, `PayPalDataProcessorQueueable`, and `PayPalDataScheduler`. You can modify these classes to meet your specific requirements.
 
 ## Getting Started
 
 ### Step 1: Clone the Project and Open in Visual Studio Code
 
-Begin by cloning this project and opening the project directory in Visual Studio Code (VSCODE).
+1. Clone this project and open the project directory in Visual Studio Code (VSCODE).
 
 ```shell
 git clone https://github.com/mohamearif/Salesforce-PayPal-Transaction-Integration.git
-cd <project-directory>
 ```
 
+```shell
+cd <project-directory>
+```
 ### Step 2: Enable Custom Address Field in Salesforce Org
 
-Before deploying the integration, ensure that you have enabled the custom address field in your Salesforce org as a pre-deployment step.
+Before deploying the integration, ensure you have enabled the custom address field in your Salesforce org.
 
 1. Navigate to `Setup > User Interface`.
 2. Check the checkbox next to "Use custom address fields."
 
 ### Step 3: Deploy the Integration
 
-Deploy the PayPal Transaction Integration using the provided `package.xml` file in the manifest folder of this project. Make sure to run the test classes to ensure everything works correctly before deploying it to your production environment.
+Deploy the PayPal Transaction Integration using the provided `package.xml` file in the manifest folder of this project. Run the test classes to ensure everything works correctly before deploying it to your production environment.
 
 ```shell
 sfdx force:source:deploy --manifest manifest/package.xml -l RunSpecifiedTests -r PayPalDataExportQueueableTest PayPalDataProcessorQueueableTest PayPalDataSchedulerTest PayPalTransactionDataTest
 ```
 ### Step 4: Schedule the Data Retrieval
 
-After deploying the integration, run the post-deployment script to schedule the PayPalDataScheduler Apex Class to run automatically every day at 3 AM and also for adding 'PayPal_Data_Permissions' Permission Set to all system adminstrator users. Please take a look at the PostDeploymentScript apex script and update according to your need.
+After deploying the integration, run the post-deployment script to schedule the `PayPalDataScheduler` Apex Class to run automatically every day at 3 AM. Also, add the 'PayPal_Data_Permissions' Permission Set to all system administrator users. Customize the PostDeploymentScript Apex script as needed.
 
 ```shell
 sfdx force:apex:execute -f scripts/apex/PostDeploymentScript.apex
 ```
-
-This step ensures that the data retrieval process is automated, and your integration will consistently update your Salesforce instance with PayPal Transactions. 
-
 ### Step 5: Named Credential Update
 
-Update the namedCredential 'PayPal_Named_Credential' with YOUR_PAYPAL_ACCOUNT_CLIENT_ID and YOUR_PAYPAL_ACCOUNT_CLIENT_SECRET from your paypal sandbox. Please make sure on PayPal REST API App that it has access to Transactions.
-
-If you encounter any issues or have specific customization requirements, refer to the PayPalDataProcessorQueueable, PayPalDataScheduler & PayPalDataExportQueueable Apex classes for further adjustments.
+Update the named credential 'PayPal_Named_Credential' with your PayPal account client ID and client secret from your PayPal sandbox. Ensure that your PayPal REST API App has access to Transactions.
 
 ### Step 6: Permission and Configuration
 
-1. Assign the 'PayPal_Data_Permissions' permission set to the user who needs to access the PayPal_Transaction__c tab/records.
-2. Visit manage records on custom metadata type 'Salesforce_PayPal_Transaction_Settings__mdt' to customize few of the settings such as 
+1. **Assign the 'PayPal_Data_Permissions' Permission Set**: Assign the 'PayPal_Data_Permissions' permission set to users who need access to the 'PayPal_Transaction__c' tab/records. This permission set grants the necessary permissions for managing PayPal transactions within Salesforce.
 
-    a. AccountRecordTypeDeveloperName - To set a specific Account Record Type while the Account records are created while exporting PayPal Transactions to Salesforce.
+2. **Customize with Custom Metadata Type**:
 
-    b. ContactRecordTypeDeveloperName - To set a specific Contact Record Type while the Contact records are created while exporting PayPal Transactions to Salesforce.
+    a. `AccountRecordTypeDeveloperName`: Set a specific Account Record Type when creating Account records during the export of PayPal Transactions to Salesforce.
 
-    c. ExcludeAccountContact - Avoid creating accounts and contacts while exporting PayPal Transactions to Salesforce.
+    b. `ContactRecordTypeDeveloperName`: Set a specific Contact Record Type when creating Contact records during the export of PayPal Transactions to Salesforce.
 
-    d. PageSize - Setting the PageSize of the export per API call on the Queueable Apex.
+    c. `ExcludeAccountContact`: This setting allows you to avoid creating accounts and contacts while exporting PayPal Transactions to Salesforce. Set it according to your needs.
+
+    d. `PageSize`: Adjust the 'PageSize' to set the number of records exported per API call in the Queueable Apex. This allows you to control the size of each batch of records processed.
 
 ### Step 7: Existing Data Export (Optional)
 
-If you have existing transactions on the PayPal account that you want to export to Salesforce then please open the file scripts/apex/ExistingDataExportToSalesforce.apex on this project and follow through the steps on top section of the file.
+If you have existing transactions in your PayPal account that you want to export to Salesforce, follow these steps:
 
+1. Open the file 'scripts/apex/ExistingDataExportToSalesforce.apex' in this project.
+2. Review the instructions provided at the top section of the file. It contains guidance on how to export existing PayPal transactions to Salesforce.
+3. Execute the necessary Apex code within the file to initiate the export process.
 
+Please note that this step is optional and applies to cases where you have historical data in your PayPal account that you want to bring into Salesforce.
