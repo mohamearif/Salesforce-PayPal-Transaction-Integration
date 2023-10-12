@@ -5,6 +5,10 @@ public class PayPalDataExportQueueable implements Queueable, Database.AllowsCall
     public Integer page {get; set;}
     public Integer pageSize {get; set;}
     public Boolean excludeAccountContactProcessing {get; set;}
+    //data migration mode parameters
+    public Boolean dataMigrationMode {get; set;}
+    public DateTime sDateTime {get; set;}
+    public DateTime eDateTime {get; set;}
 
     public PayPalDataExportQueueable(String sDateTime, String eDateTime, Integer currentPage, Integer pageSize, Boolean excludeAccountContactProcessing) {
         this.startDateStr = sDateTime;
@@ -12,6 +16,20 @@ public class PayPalDataExportQueueable implements Queueable, Database.AllowsCall
         this.page = currentPage;
         this.pageSize = pageSize;
         this.excludeAccountContactProcessing = excludeAccountContactProcessing;
+    }
+
+    public PayPalDataExportQueueable(Boolean dataMigrationMode, DateTime sDateTime, DateTime eDateTime, Integer currentPage, Integer pageSize, Boolean excludeAccountContactProcessing) {
+        this.startDateStr = sDateTime.format('yyyy-MM-dd');
+        this.startDateStr += 'T00:00:00.000Z';
+        this.endDateStr = sDateTime.addDays(30).format('yyyy-MM-dd');
+        this.endDateStr += 'T13:25:45.000Z';
+        this.page = currentPage;
+        this.pageSize = pageSize;
+        this.excludeAccountContactProcessing = excludeAccountContactProcessing;
+        //data migration mode parameters
+        this.dataMigrationMode = dataMigrationMode;
+        this.sDateTime = sDateTime;
+        this.eDateTime = eDateTime;
     }
 
     public void execute(QueueableContext context) {
@@ -51,6 +69,10 @@ public class PayPalDataExportQueueable implements Queueable, Database.AllowsCall
                 transactionData.start_datetime = startDateStr;
                 transactionData.end_datetime = endDateStr;
                 transactionData.excludeAccountContactProcessing = excludeAccountContactProcessing;
+                //data migration mode parameters
+                transactionData.dataMigrationMode = dataMigrationMode;
+                transactionData.sDateTime = sDateTime;
+                transactionData.eDateTime = eDateTime;
                 if(!Test.isRunningTest()) {
                     System.enqueueJob(new PayPalDataProcessorQueueable(transactionData));
                 }

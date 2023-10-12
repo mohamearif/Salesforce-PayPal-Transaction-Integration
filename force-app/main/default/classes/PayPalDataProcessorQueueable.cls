@@ -32,7 +32,19 @@ public with sharing class PayPalDataProcessorQueueable implements Queueable{
             findAndInsertContactsHouseHoldsPayPalTransactions(transactionData.Transaction_details);
             //chain another paypal export if there are more pages of data
             if(transactionData.page < transactionData.total_pages) {
-                System.enqueueJob(new PayPalDataExportQueueable(transactionData.start_datetime, transactionData.end_datetime, transactionData.page+1, transactionData.page_size, transactionData.excludeAccountContactProcessing));
+                if (!transactionData.dataMigrationMode) {
+                    System.enqueueJob(new PayPalDataExportQueueable(transactionData.start_datetime, transactionData.end_datetime, transactionData.page+1, transactionData.page_size, transactionData.excludeAccountContactProcessing));
+                } else {
+                    System.enqueueJob(new PayPalDataExportQueueable(transactionData.dataMigrationMode, transactionData.sDateTime, transactionData.eDateTime, transactionData.page+1, transactionData.page_size, transactionData.excludeAccountContactProcessing));
+                }
+            } else {
+                if (transactionData.dataMigrationMode != null & transactionData.dataMigrationMode == true) {
+                    Boolean killCurrentDataMigrationFailSafe = Boolean.valueOf(Salesforce_PayPal_Transaction_Settings__mdt.getInstance('KillCurrentDataMigrationFailSafe').Value__c);
+                    if (killCurrentDataMigrationFailSafe == false & transactionData.sDateTime < transactionData.eDateTime ) {
+                        transactionData.sDateTime = transactionData.sDateTime.addDays(30);
+                        System.enqueueJob(new PayPalDataExportQueueable(transactionData.dataMigrationMode, transactionData.sDateTime, transactionData.eDateTime, 1, transactionData.page_size, transactionData.excludeAccountContactProcessing));
+                    }
+                }
             }
         } catch(Exception ex) {
             errorEmail('PayPalDataProcessorQueueable', ex.getStackTraceString());
@@ -44,9 +56,12 @@ public with sharing class PayPalDataProcessorQueueable implements Queueable{
         set<String> contactIdentifiers = new set<String>();
         set<String> paypalTransactionIdentifiers = new set<String>();
         for (PayPalTransactionData.Transaction_details trans : transactions) {
-            accountIdentifiers.add(getAccountIdentifier(trans));
-            contactIdentifiers.add(getContactIdentifier(trans));
-            paypalTransactionIdentifiers.add(getPayPalTransactionIdentifier(trans));
+            String contactIdentifier = getContactIdentifier(trans).toLowerCase();
+            if (!String.isEmpty(contactIdentifier)) {
+                accountIdentifiers.add(getAccountIdentifier(trans).toLowerCase());
+                contactIdentifiers.add(contactIdentifier);
+                paypalTransactionIdentifiers.add(getPayPalTransactionIdentifier(trans));
+            }
         }
         Map<String, Account> accountsMap = new Map<String, Account>();
         for (Account a : [SELECT Id, Name, External_Id__c FROM Account WHERE External_Id__c IN :accountIdentifiers]){
@@ -65,33 +80,36 @@ public with sharing class PayPalDataProcessorQueueable implements Queueable{
         wrapper.contacts = new Map<String, Contact>();
         wrapper.paypalTransactions = new Map<String, PayPal_Transaction__c>();
         for (PayPalTransactionData.Transaction_details trans : transactions) {
-            if (trans.transaction_info.transaction_status == 'S' &  trans.transaction_info.transaction_event_code != 'T0400') { //bringing in only 'S' = successfull transactions into Salesforce and also avoid bringing in General withdrawal from PayPal account. 
+            String contactIdentifier = getContactIdentifier(trans).toLowerCase();
+            if (!String.isEmpty(contactIdentifier) & trans.transaction_info.transaction_status == 'S' &  trans.transaction_info.transaction_event_code != 'T0400') { //bringing in only 'S' = successfull transactions into Salesforce and also avoid bringing in General withdrawal from PayPal account. 
                 Contact c = new Contact();
                 Account a = new Account();
                 if (!transactionData.excludeAccountContactProcessing) {
-                    if(wrapper.contacts.get(getContactIdentifier(trans)) == null) {
-                        if(contactsMap.get(getContactIdentifier(trans)) == null) {
-                            c = getContact(trans);
-                            if(!String.isEmpty(contactRecordTypeId)) {c.put('RecordTypeId', contactRecordTypeId); }
-                            wrapper.contacts.put(getContactIdentifier(trans), c);
-                        } else {
-                            c =  contactsMap.get(getContactIdentifier(trans));
-                        }
-                    } else {
-                        c = wrapper.contacts.get(getContactIdentifier(trans));
-                    }
-                    if(wrapper.households.get(getAccountIdentifier(trans)) == null) {
-                        if(accountsMap.get(getAccountIdentifier(trans)) == null) {
-                            a.Name = leftTrim(c.LastName + '\'s Household', accountFieldLengths.get('Name'));
-                            a.External_Id__c = getAccountIdentifier(trans);
+                    String accountIdentifier = getAccountIdentifier(trans).toLowerCase();
+                    if(wrapper.households.get(accountIdentifier) == null) {
+                        if(accountsMap.get(accountIdentifier) == null) {
+                            String lastName = !String.isEmpty(trans.payer_info?.payer_name?.surname) ? trans.payer_info.payer_name.surname : (!String.isEmpty(trans.shipping_info?.name) & trans.shipping_info.name.contains(',')) ? trans.shipping_info.name.split(', ')[1] : trans.shipping_info.name;
+                            a.Name = leftTrim(lastName + '\'s Household', accountFieldLengths.get('Name'));
+                            a.External_Id__c = accountIdentifier;
                             a = getAccountAddress(a, trans);
                             if(!String.isEmpty(accountRecordTypeId)) {a.put('RecordTypeId', accountRecordTypeId);}
-                            wrapper.households.put(getAccountIdentifier(trans), a);
+                            wrapper.households.put(accountIdentifier, a);
                         } else {
-                            a = accountsMap.get(getAccountIdentifier(trans));
+                            a = accountsMap.get(accountIdentifier);
                         }
                     } else {
-                        a = wrapper.households.get(getAccountIdentifier(trans));
+                        a = wrapper.households.get(accountIdentifier);
+                    }
+                    if(wrapper.contacts.get(contactIdentifier) == null) {
+                        if(contactsMap.get(contactIdentifier) == null) {
+                            c = getContact(trans, a);
+                            if(!String.isEmpty(contactRecordTypeId)) {c.put('RecordTypeId', contactRecordTypeId); }
+                            wrapper.contacts.put(contactIdentifier, c);
+                        } else {
+                            c =  contactsMap.get(contactIdentifier);
+                        }
+                    } else {
+                        c = wrapper.contacts.get(contactIdentifier);
                     }
                 }
                 if(wrapper.paypalTransactions.get(getPayPalTransactionIdentifier(trans)) == null) {
@@ -135,23 +153,23 @@ public with sharing class PayPalDataProcessorQueueable implements Queueable{
 
     private Account getAccountAddress(Account a, PayPalTransactionData.Transaction_details trans){
         //mailing
-        String ShippingStreet =  !String.isEmpty(trans.shipping_info?.address?.line1) ? trans.shipping_info.address.line1 : '';
+        String shippingStreet =  !String.isEmpty(trans.shipping_info?.address?.line1) ? trans.shipping_info.address.line1 : '';
         if (!String.isBlank(trans.shipping_info?.address?.line2)) {
             ShippingStreet += ', ';
             ShippingStreet += !String.isEmpty(trans.shipping_info?.address?.line2) ? trans.shipping_info.address.line2 : '';
         } 
-        a.ShippingStreet = leftTrim(ShippingStreet, accountFieldLengths.get('ShippingStreet'));
+        a.ShippingStreet = leftTrim(shippingStreet, accountFieldLengths.get('ShippingStreet'));
         a.ShippingCity = !String.isEmpty(trans.shipping_info?.address?.city) ? leftTrim(trans.shipping_info.address.city, accountFieldLengths.get('ShippingCity')) : '';
         a.ShippingState = !String.isEmpty(trans.shipping_info?.address?.state) ? leftTrim(trans.shipping_info.address.state, accountFieldLengths.get('ShippingState')) : '';
         a.ShippingCountry = !String.isEmpty(trans.shipping_info?.address?.country_code) ? leftTrim(trans.shipping_info.address.country_code, accountFieldLengths.get('ShippingCountry')) : '';
         a.ShippingPostalCode = !String.isEmpty(trans.shipping_info?.address?.postal_code) ? leftTrim(trans.shipping_info.address.postal_code, accountFieldLengths.get('ShippingPostalCode')) : '';
         //billing 
-        String BillingStreet =  !String.isEmpty(trans.payer_info?.address?.line1) ? trans.payer_info.address.line1 : '';
+        String billingStreet =  !String.isEmpty(trans.payer_info?.address?.line1) ? trans.payer_info.address.line1 : '';
         if (!String.isBlank(trans.payer_info?.address?.line2)) {
             BillingStreet += ', ';
             BillingStreet += !String.isEmpty(trans.payer_info?.address?.line2) ? trans.payer_info.address.line2 : '';
         } 
-        a.BillingStreet = leftTrim(BillingStreet, accountFieldLengths.get('BillingStreet'));
+        a.BillingStreet = leftTrim(billingStreet, accountFieldLengths.get('BillingStreet'));
         a.BillingCity = !String.isEmpty(trans.payer_info?.address?.city) ? leftTrim(trans.payer_info.address.city, accountFieldLengths.get('BillingCity')) : '';
         a.BillingState = !String.isEmpty(trans.payer_info?.address?.state) ? leftTrim(trans.payer_info.address.state, accountFieldLengths.get('BillingState')) : '';
         a.BillingCountry = !String.isEmpty(trans.payer_info?.address?.country_code) ? leftTrim(trans.payer_info.address.country_code, accountFieldLengths.get('BillingCountry')) : '';
@@ -160,9 +178,11 @@ public with sharing class PayPalDataProcessorQueueable implements Queueable{
     }
 
     private String getContactIdentifier(PayPalTransactionData.Transaction_details trans) {
-        //String accountId = getAccountIdentifier(trans);
         String firstName = !String.isEmpty(trans.payer_info?.payer_name?.given_name) ? trans.payer_info?.payer_name.given_name : !String.isEmpty(trans.shipping_info?.name) ? trans.shipping_info.name.split(', ')[0] : '';
-        String lastName = !String.isEmpty(trans.payer_info?.payer_name?.surname) ? trans.payer_info.payer_name.surname : (!String.isEmpty(trans.shipping_info?.name) & trans.shipping_info.name.contains(',')) ? trans.shipping_info.name.split(', ')[1] : trans.shipping_info.name;
+        String lastName = '';
+        if (!String.isEmpty(firstName)) {
+            lastName = !String.isEmpty(trans.payer_info?.payer_name?.surname) ? trans.payer_info?.payer_name?.surname : (!String.isEmpty(trans.shipping_info?.name) & trans.shipping_info?.name?.contains(',')) ? trans.shipping_info?.name?.split(', ')[1] : trans.shipping_info.name;
+        }
         //String middleName = trans.payer_info?.payer_name?.middle_name ? trans.payer_info.payer_name.middle_name : '';
         // String addressLine1 =  !String.isEmpty(trans.shipping_info?.address?.line1) ? trans.shipping_info.address.line1 : '';
         // String addressLine2 = !String.isEmpty(trans.shipping_info?.address?.line2) ? trans.shipping_info.address.line2 : '';
@@ -170,20 +190,25 @@ public with sharing class PayPalDataProcessorQueueable implements Queueable{
         // String state = !String.isEmpty(trans.shipping_info?.address?.state) ? trans.shipping_info.address.state : '';
         // String countryCode = !String.isEmpty(trans.shipping_info?.address?.country_code) ? trans.shipping_info.address.country_code : '';
         // String postalCode = !String.isEmpty(trans.shipping_info?.address?.postal_code) ? trans.shipping_info.address.postal_code : '';
-        String identifier = firstName + lastName + trans.payer_info.email_address;
+        String email = !String.isEmpty(trans.payer_info.email_address) ? trans.payer_info.email_address : '';
+        String identifier = firstName + lastName + email;
         identifier = identifier.length() > 255 ? identifier.substring(0, 244) : identifier;
         return identifier;
     }
 
-    private Contact getContact(PayPalTransactionData.Transaction_details trans) {
+    private Contact getContact(PayPalTransactionData.Transaction_details trans, Account a) {
         Contact c = new Contact (
-            Account = new Account(External_Id__c=getAccountIdentifier(trans)),
             FirstName = !String.isEmpty(trans.payer_info?.payer_name?.given_name) ? trans.payer_info?.payer_name.given_name : !String.isEmpty(trans.shipping_info?.name) ? trans.shipping_info.name.split(', ')[0] : '',
             LastName = !String.isEmpty(trans.payer_info?.payer_name?.surname) ? trans.payer_info.payer_name.surname : (!String.isEmpty(trans.shipping_info?.name) & trans.shipping_info.name.contains(',')) ? trans.shipping_info.name.split(', ')[1] : trans.shipping_info.name,
             //MiddleName = trans.payer_info?.payer_name?.middle_name ? trans.payer_info.payer_name.middle_name : '',
             Email = leftTrim(trans.payer_info.email_address, contactFieldLengths.get('Email')),
-            External_Id__c = getContactIdentifier(trans)
+            External_Id__c = getContactIdentifier(trans).toLowerCase()
         );
+        if (a.Id != null) {
+            c.AccountId = a.Id;
+        } else {
+            c.Account = new Account( External_Id__c = a.External_Id__c );
+        }
         c.FirstName = leftTrim(c.FirstName, contactFieldLengths.get('FirstName'));
         c.LastName = leftTrim(c.LastName, contactFieldLengths.get('LastName'));
         c = getContactAddress(c, trans);
@@ -192,23 +217,23 @@ public with sharing class PayPalDataProcessorQueueable implements Queueable{
 
     private Contact getContactAddress(Contact c, PayPalTransactionData.Transaction_details trans){
         //mailing
-        String MailingStreet =  !String.isEmpty(trans.shipping_info?.address?.line1) ? trans.shipping_info.address.line1 : '';
+        String mailingStreet =  !String.isEmpty(trans.shipping_info?.address?.line1) ? trans.shipping_info.address.line1 : '';
         if (!String.isBlank(trans.shipping_info?.address?.line2)) {
             MailingStreet += ', ';
             MailingStreet += !String.isEmpty(trans.shipping_info?.address?.line2) ? trans.shipping_info.address.line2 : '';
         } 
-        c.MailingStreet = leftTrim(MailingStreet, contactFieldLengths.get('MailingStreet'));
+        c.MailingStreet = leftTrim(mailingStreet, contactFieldLengths.get('MailingStreet'));
         c.MailingCity = !String.isEmpty(trans.shipping_info?.address?.city) ? leftTrim(trans.shipping_info.address.city, contactFieldLengths.get('MailingCity')) : '';
         c.MailingState = !String.isEmpty(trans.shipping_info?.address?.state) ? leftTrim(trans.shipping_info.address.state, contactFieldLengths.get('MailingState')) : '';
         c.MailingCountry = !String.isEmpty(trans.shipping_info?.address?.country_code) ? leftTrim(trans.shipping_info.address.country_code, contactFieldLengths.get('MailingCountry')) : '';
         c.MailingPostalCode = !String.isEmpty(trans.shipping_info?.address?.postal_code) ? leftTrim(trans.shipping_info.address.postal_code, contactFieldLengths.get('MailingPostalCode')) : '';
         //billing into Other address
-        String OtherStreet =  !String.isEmpty(trans.payer_info?.address?.line1) ? trans.payer_info.address.line1 : '';
+        String otherStreet =  !String.isEmpty(trans.payer_info?.address?.line1) ? trans.payer_info.address.line1 : '';
         if (!String.isBlank(trans.payer_info?.address?.line2)) {
             OtherStreet += ', ';
             OtherStreet += !String.isEmpty(trans.payer_info?.address?.line2) ? trans.payer_info.address.line2 : '';
         } 
-        c.OtherStreet = leftTrim(OtherStreet, contactFieldLengths.get('OtherStreet'));
+        c.OtherStreet = leftTrim(otherStreet, contactFieldLengths.get('OtherStreet'));
         c.OtherCity = !String.isEmpty(trans.payer_info?.address?.city) ? leftTrim(trans.payer_info.address.city, contactFieldLengths.get('OtherCity')) : '';
         c.OtherState = !String.isEmpty(trans.payer_info?.address?.state) ? leftTrim(trans.payer_info.address.state, contactFieldLengths.get('OtherState')) : '';
         c.OtherCountry = !String.isEmpty(trans.payer_info?.address?.country_code) ? leftTrim(trans.payer_info.address.country_code, contactFieldLengths.get('OtherCountry')) : '';
@@ -231,7 +256,7 @@ public with sharing class PayPalDataProcessorQueueable implements Queueable{
         String identifier = !String.isBlank(shippingAddress) ? shippingAddress : !String.isBlank(billingAddress) ? billingAddress : '';
         identifier = identifier.length() > 255 ? identifier.substring(0, 244) : identifier;
         if (String.isBlank(identifier)) {
-            identifier = getContactIdentifier(trans);
+            identifier = getContactIdentifier(trans).toLowerCase();
         }
         return identifier;
         //return trans.payer_info.account_id;
@@ -284,22 +309,22 @@ public with sharing class PayPalDataProcessorQueueable implements Queueable{
     }
 
     private PayPal_Transaction__c getPayPalTransactionAddress(PayPal_Transaction__c d, PayPalTransactionData.Transaction_details trans) {
-        String MailingStreet =  !String.isEmpty(trans.shipping_info?.address?.line1) ? trans.shipping_info.address.line1 : '';
+        String mailingStreet =  !String.isEmpty(trans.shipping_info?.address?.line1) ? trans.shipping_info.address.line1 : '';
         if (!String.isBlank(trans.shipping_info?.address?.line2)) {
             MailingStreet += ', ';
             MailingStreet += !String.isEmpty(trans.shipping_info?.address?.line2) ? trans.shipping_info.address.line2 : '';
         }
-        d.Mailing_Address__Street__s = leftTrim(MailingStreet, paypalTransactionFieldLengths.get('Mailing_Address__Street__s'));
+        d.Mailing_Address__Street__s = leftTrim(mailingStreet, paypalTransactionFieldLengths.get('Mailing_Address__Street__s'));
         d.Mailing_Address__City__s = !String.isEmpty(trans.shipping_info?.address?.city) ? leftTrim(trans.shipping_info.address.city, paypalTransactionFieldLengths.get('Mailing_Address__City__s')) : '';
         d.Mailing_Address__StateCode__s = !String.isEmpty(trans.shipping_info?.address?.state) ? leftTrim(trans.shipping_info.address.state, paypalTransactionFieldLengths.get('Mailing_Address__StateCode__s')) : '';
         d.Mailing_Address__CountryCode__s = !String.isEmpty(trans.shipping_info?.address?.country_code) ? leftTrim(trans.shipping_info.address.country_code, paypalTransactionFieldLengths.get('Mailing_Address__CountryCode__s')) : '';
         d.Mailing_Address__PostalCode__s = !String.isEmpty(trans.shipping_info?.address?.postal_code) ? leftTrim(trans.shipping_info.address.postal_code, paypalTransactionFieldLengths.get('Mailing_Address__PostalCode__s')) : '';
-        String BillingStreet =  !String.isEmpty(trans.payer_info?.address?.line1) ? trans.payer_info.address.line1 : '';
+        String billingStreet =  !String.isEmpty(trans.payer_info?.address?.line1) ? trans.payer_info.address.line1 : '';
         if (!String.isBlank(trans.payer_info?.address?.line2)) {
             BillingStreet += ', ';
             BillingStreet += !String.isEmpty(trans.payer_info?.address?.line2) ? trans.payer_info.address.line2 : '';
         }
-        d.Billing_Address__Street__s = leftTrim(BillingStreet, paypalTransactionFieldLengths.get('Billing_Address__Street__s'));
+        d.Billing_Address__Street__s = leftTrim(billingStreet, paypalTransactionFieldLengths.get('Billing_Address__Street__s'));
         d.Billing_Address__City__s = !String.isEmpty(trans.payer_info?.address?.city) ? leftTrim(trans.payer_info.address.city, paypalTransactionFieldLengths.get('Billing_Address__City__s')) : '';
         d.Billing_Address__StateCode__s = !String.isEmpty(trans.payer_info?.address?.state) ? leftTrim(trans.payer_info.address.state, paypalTransactionFieldLengths.get('Billing_Address__StateCode__s')) : '';
         d.Billing_Address__CountryCode__s = !String.isEmpty(trans.payer_info?.address?.country_code) ? leftTrim(trans.payer_info.address.country_code, paypalTransactionFieldLengths.get('Billing_Address__CountryCode__s')) : '';

@@ -38,11 +38,12 @@
         <name>CustomField</name>
     </types>
     <types>
-        <name>CustomMetadata</name>
         <members>Salesforce_PayPal_Transaction_Settings.AccountRecordTypeDeveloperName</members>
         <members>Salesforce_PayPal_Transaction_Settings.ContactRecordTypeDeveloperName</members>
         <members>Salesforce_PayPal_Transaction_Settings.ExcludeAccountContact</members>
+        <members>Salesforce_PayPal_Transaction_Settings.KillCurrentDataMigrationFailSafe</members>
         <members>Salesforce_PayPal_Transaction_Settings.PageSize</members>
+        <name>CustomMetadata</name>
     </types>
      <types>
         <members>PayPal_Transaction__c</members>

@@ -35,6 +35,10 @@ public class PayPalTransactionData {
 	public String start_datetime {get; set;}
 	public String end_datetime {get; set;}
 	public Boolean excludeAccountContactProcessing {get; set;}
+	//data migration mode parameters
+    public Boolean dataMigrationMode {get; set;}
+    public DateTime sDateTime {get; set;}
+    public DateTime eDateTime {get; set;}
 
 	public class Address {
 		public String line1;
