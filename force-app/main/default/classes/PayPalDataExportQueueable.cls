@@ -82,6 +82,7 @@ public class PayPalDataExportQueueable implements Queueable, Database.AllowsCall
         }
     }
     
+    @testvisible
     private String getPayPalAccessToken() {
         // Implement logic to obtain and return the PayPal access token
         String namedCredential = 'PayPal_Named_Credential'; // Replace with the API name of your named credential

@@ -15,7 +15,10 @@ public class PayPalTransactionDataTest {
         transactionData.page_size = 1;
         transactionData.start_datetime = Datetime.now().addDays(-3).format('yyyy-MM-dd')+'T00:00:00.000Z';
         transactionData.end_datetime = Datetime.now().format('yyyy-MM-dd')+'T23:59:59.999Z';
-        
+        transactionData.excludeAccountContactProcessing = false;
+        transactionData.dataMigrationMode = false;
+        transactionData.sDateTime = Datetime.now();
+        transactionData.eDateTime = Datetime.now();
         // Create a Transaction_details object
         PayPalTransactionData.Transaction_details transactionDetails = new PayPalTransactionData.Transaction_details();
         transactionData.transaction_details = new List<PayPalTransactionData.Transaction_details>();
