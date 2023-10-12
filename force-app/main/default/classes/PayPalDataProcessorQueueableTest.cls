@@ -44,7 +44,7 @@ public with sharing class PayPalDataProcessorQueueableTest {
         PayPalTransactionData transactionData = (PayPalTransactionData)JSON.deserialize(payPalTransactionDataString, PayPalTransactionData.class);
         transactionData.excludeAccountContactProcessing = false;
         transactionData.dataMigrationMode = true;
-        transactionData.sDateTime = Datetime.now();
+        transactionData.sDateTime = Datetime.now().addDays(-32);
         transactionData.eDateTime = Datetime.now().addDays(31);
         // Enqueue the queueable job
         System.enqueueJob(new PayPalDataProcessorQueueable(transactionData));

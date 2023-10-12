@@ -40,7 +40,7 @@ public with sharing class PayPalDataProcessorQueueable implements Queueable{
             } else {
                 if (transactionData.dataMigrationMode != null & transactionData.dataMigrationMode == true) {
                     Boolean killCurrentDataMigrationFailSafe = Boolean.valueOf(Salesforce_PayPal_Transaction_Settings__mdt.getInstance('KillCurrentDataMigrationFailSafe').Value__c);
-                    if (killCurrentDataMigrationFailSafe == false & transactionData.sDateTime < transactionData.eDateTime ) {
+                    if (killCurrentDataMigrationFailSafe == false & transactionData.sDateTime.addDays(30) < transactionData.eDateTime & transactionData.sDateTime.addDays(30) < Datetime.now()) {
                         transactionData.sDateTime = transactionData.sDateTime.addDays(30);
                         System.enqueueJob(new PayPalDataExportQueueable(transactionData.dataMigrationMode, transactionData.sDateTime, transactionData.eDateTime, 1, transactionData.page_size, transactionData.excludeAccountContactProcessing));
                     }

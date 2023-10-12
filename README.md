@@ -73,3 +73,9 @@ If you encounter any issues or have specific customization requirements, refer t
     c. ExcludeAccountContact - Avoid creating accounts and contacts while exporting PayPal Transactions to Salesforce.
 
     d. PageSize - Setting the PageSize of the export per API call on the Queueable Apex.
+
+### Step 7: Existing Data Export (Optional)
+
+If you have existing transactions on the PayPal account that you want to export to Salesforce then please open the file scripts/apex/ExistingDataExportToSalesforce.apex on this project and follow through the steps on top section of the file.
+
+

@@ -76,6 +76,8 @@ public class PayPalDataExportQueueable implements Queueable, Database.AllowsCall
                 if(!Test.isRunningTest()) {
                     System.enqueueJob(new PayPalDataProcessorQueueable(transactionData));
                 }
+            } else {
+                PayPalDataProcessorQueueable.errorEmail('Error on PayPalDataExportQueueable', 'Error getting PayPal transactions');
             }
         } catch(Exception ex) {
             PayPalDataProcessorQueueable.errorEmail('Error on PayPalDataExportQueueable', ex.getStackTraceString());
