@@ -79,7 +79,13 @@ Update the named credential 'PayPal_Named_Credential' with your PayPal account c
 
     b. `ContactRecordTypeDeveloperName`: Set a specific Contact Record Type when creating Contact records during the export of PayPal Transactions to Salesforce.
 
-    c. `ExcludeAccountContact`: This setting allows you to avoid creating accounts and contacts while exporting PayPal Transactions to Salesforce. Set it according to your needs.
+    c. `ExcludeAccountContact`: This feature provides the flexibility to prevent the creation of unnecessary accounts and contacts when exporting PayPal Transactions to Salesforce. By default, this setting is configured to exclude such creations. It is important to adjust this setting to align with your specific requirements, considering the following mappings:
+
+        For Account creation, the fields that are mapped for insertion include Name, Shipping Address, and Billing Address.
+
+        For Contact creation, the fields that are mapped for insertion encompass FirstName, LastName, Email, Mailing Address, and Other Address. 
+    
+    So be sure to configure this setting accordingly to ensure a smooth integration, while keeping in mind that no Account/Contact Validations should disrupt the process.
 
     d. `PageSize`: Adjust the 'PageSize' to set the number of records exported per API call in the Queueable Apex. This allows you to control the size of each batch of records processed.
 
