@@ -2,7 +2,7 @@
 
 This repository provides a lightweight outbound integration from Salesforce to PayPal using Scheduled and Queueable Apex. It asynchronously retrieves transactions from PayPal's Transactions REST API endpoint [here](https://developer.paypal.com/docs/api/transaction-search/v1/#search_get) and pushes them into a Salesforce custom object called 'PayPal_Transaction__c' as records.
 
-In addition, implementing record-based flow or trigger 'PayPal_Transaction__c' will enable you to seamlessly transform the incoming data into your standard/custom object records, allowing you to tailor the integration to meet your specific business requirements.
+In addition, implementing record-based flow or trigger on 'PayPal_Transaction__c' will enable you to seamlessly transform the incoming data into your standard/custom object records, allowing you to tailor the integration to meet your specific business requirements.
 
 ## Table of Contents
 
