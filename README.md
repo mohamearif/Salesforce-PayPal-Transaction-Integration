@@ -2,6 +2,8 @@
 
 This repository provides a lightweight outbound integration from Salesforce to PayPal using Scheduled and Queueable Apex. It asynchronously retrieves transactions from PayPal's Transactions REST API endpoint [here](https://developer.paypal.com/docs/api/transaction-search/v1/#search_get) and pushes them into a Salesforce custom object called 'PayPal_Transaction__c' as records.
 
+In addition, implementing record-based flow or trigger 'PayPal_Transaction__c' will enable you to seamlessly transform the incoming data into your standard/custom object records, allowing you to tailor the integration to meet your specific business requirements.
+
 ## Table of Contents
 
 - [Important Notes](#important-notes)
@@ -81,9 +83,9 @@ Update the named credential 'PayPal_Named_Credential' with your PayPal account c
 
     c. `ExcludeAccountContact`: This feature provides the flexibility to prevent the creation of unnecessary accounts and contacts when exporting PayPal Transactions to Salesforce. By default, this setting is configured to exclude such creations. It is important to adjust this setting to align with your specific requirements, considering the following mappings:
 
-        For Account creation, the fields that are mapped for insertion include Name, Shipping Address, and Billing Address.
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`For Account creation,` the fields that are mapped for insertion include Name, Shipping Address, and Billing Address.
 
-        For Contact creation, the fields that are mapped for insertion encompass FirstName, LastName, Email, Mailing Address, and Other Address. 
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`For Contact creation,` the fields that are mapped for insertion include FirstName, LastName, Email, Mailing Address, and Other Address.
     
     So be sure to configure this setting accordingly to ensure a smooth integration, while keeping in mind that no Account/Contact Validations should disrupt the process.
 
