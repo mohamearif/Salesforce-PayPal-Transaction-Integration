@@ -9,7 +9,7 @@
 List<AsyncApexJob> EveryDay3AMJob = new List<AsyncApexJob>();
 EveryDay3AMJob = [SELECT Id, Status, ApexClass.Name, JobType, CronTrigger.CronJobDetail.Name FROM AsyncApexJob WHERE JOBTYPE = 'ScheduledApex' and ApexClass.Name = 'PayPalDataScheduler' and CronTrigger.CronJobDetail.Name = 'PayPalDataScheduler - Everyday 3AM'];
 if (EveryDay3AMJob.isEmpty()) {
-    String everyDayAt3AM = '0 00 03 ? * 2';  //Every Monday, 5AM
+    String everyDayAt3AM = '0 0 3 * * ?';  //Everyday at 3AM
     PayPalDataScheduler pds = new PayPalDataScheduler(); 
     System.schedule('PayPalDataScheduler - Everyday 3AM', everyDayAt3AM, pds);
 }
