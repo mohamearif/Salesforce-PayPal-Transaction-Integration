@@ -4,10 +4,12 @@
     <columns>NAME</columns>
     <columns>First_Name__c</columns>
     <columns>Last_Name__c</columns>
-    <columns>Transaction_Note__c</columns>
     <columns>Transaction_Amount__c</columns>
     <columns>Transaction_Classification__c</columns>
+    <columns>Transaction_Event_Code__c</columns>
     <columns>Transaction_Date__c</columns>
+    <columns>Transaction_Note__c</columns>
+    <columns>Transaction_Subject__c</columns>
     <columns>Mailing_Address__PostalCode__s</columns>
     <columns>Billing_Address__PostalCode__s</columns>
     <filterScope>Everything</filterScope>

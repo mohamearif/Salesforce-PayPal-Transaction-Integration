@@ -19,6 +19,7 @@
         <members>PayPal_Transaction__c.Billing_Address__c</members>
         <members>PayPal_Transaction__c.Contact__c</members>
         <members>PayPal_Transaction__c.Cart_Info__c</members>
+        <members>PayPal_Transaction__c.Classification_Details__c</members>
         <members>PayPal_Transaction__c.Email__c</members>
         <members>PayPal_Transaction__c.Fee_Amount__c</members>
         <members>PayPal_Transaction__c.First_Name__c</members>

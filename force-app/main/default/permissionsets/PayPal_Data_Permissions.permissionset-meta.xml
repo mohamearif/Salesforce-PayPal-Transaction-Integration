@@ -56,6 +56,11 @@
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
+        <editable>false</editable>
+        <field>PayPal_Transaction__c.Classification_Details__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
         <editable>true</editable>
         <field>PayPal_Transaction__c.Contact__c</field>
         <readable>true</readable>

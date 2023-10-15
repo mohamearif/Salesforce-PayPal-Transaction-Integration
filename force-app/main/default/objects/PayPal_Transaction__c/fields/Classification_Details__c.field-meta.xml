@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Classification_Details__c</fullName>
+    <externalId>false</externalId>
+    <formula>CASE( Transaction_Event_Code__c, 
+  &quot;T0000&quot;, &quot;General: received payment&quot;,
+  &quot;T1107&quot;, &quot;Payment refund, initiated by merchant&quot;, 
+  &quot;T0400&quot;, &quot;General withdrawal from PayPal account&quot;,
+  &quot;T0006&quot;, &quot;PayPal Checkout APIs&quot;,
+  &quot;T0013&quot;, &quot;Donation payment&quot;,
+  &quot;T0002&quot;, &quot;Subscription payment. Either payment sent or payment received.&quot;,
+  &quot;T0011&quot;, &quot;Mobile payment, made through a mobile phone.&quot;,
+  &quot;T0007&quot;, &quot;Website payments standard payment&quot;,
+  &quot;T0003&quot;, &quot;Pre-approved payment (BillUser API). Either sent or received.&quot;,
+  &quot;Un-Classified: Please lookup here to classify this transaction: https://developer.paypal.com/docs/transaction-search/transaction-event-codes/&quot;
+)</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <label>Classification Details</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>
