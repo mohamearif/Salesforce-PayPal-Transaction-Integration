@@ -47,6 +47,10 @@
                 <behavior>Edit</behavior>
                 <field>Cart_Info__c</field>
             </layoutItems>
+            <layoutItems>
+                <behavior>Readonly</behavior>
+                <field>Classification_Details__c</field>
+            </layoutItems>
         </layoutColumns>
         <layoutColumns>
             <layoutItems>
