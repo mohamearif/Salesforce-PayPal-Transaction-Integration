@@ -91,7 +91,7 @@ Update the named credential 'PayPal_Named_Credential' with your PayPal account c
 
     d. `PageSize`: Adjust the 'PageSize' to set the number of records exported per API call in the Queueable Apex. This allows you to control the size of each batch of records processed.
 
-    e. `ExcludedTransactionEventCodes`: Accepts semi-colon separated PayPal transaction event codes. Defaults to T0400 which to excludes exporting general withdrawal transactions. To add more event exclusions, please use event codes on the PayPal documentation: https://developer.paypal.com/docs/transaction-search/transaction-event-codes/.
+    e. `ExcludedTransactionEventCodes`: Accepts semi-colon separated PayPal transaction event codes. Defaults to T0400 which excludes exporting general withdrawal transactions. To add more event exclusions, please use event codes on the PayPal documentation: https://developer.paypal.com/docs/transaction-search/transaction-event-codes/.
 
     f. `IncludedTransactionStatus`: Accepts semi-colon separated status. Defaults to S - successful transactions. Please use status values on the PayPal documentation: https://developer.paypal.com/docs/api/transaction-search/v1/#search_get!in=query&amp;path=transaction_status&amp;t=request.
 
