@@ -16,6 +16,10 @@
         <name>CustomApplication</name>
     </types>
     <types>
+        <members>paypal1</members>
+        <name>ContentAsset</name>
+    </types>
+    <types>
         <members>Account.External_Id__c</members>
         <members>Contact.External_Id__c</members>
         <members>PayPal_Transaction__c.Account__c</members>
