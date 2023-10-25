@@ -12,6 +12,10 @@
         <name>ApexClass</name>
     </types>
     <types>
+        <members>PayPal_Transaction_Integration</members>
+        <name>CustomApplication</name>
+    </types>
+    <types>
         <members>Account.External_Id__c</members>
         <members>Contact.External_Id__c</members>
         <members>PayPal_Transaction__c.Account__c</members>
@@ -42,18 +46,26 @@
         <members>Salesforce_PayPal_Transaction_Settings.AccountRecordTypeDeveloperName</members>
         <members>Salesforce_PayPal_Transaction_Settings.ContactRecordTypeDeveloperName</members>
         <members>Salesforce_PayPal_Transaction_Settings.ExcludeAccountContact</members>
+        <members>Salesforce_PayPal_Transaction_Settings.ExcludedTransactionEventCodes</members>
+        <members>Salesforce_PayPal_Transaction_Settings.IncludedTransactionStatus</members>
         <members>Salesforce_PayPal_Transaction_Settings.KillCurrentDataMigrationFailSafe</members>
         <members>Salesforce_PayPal_Transaction_Settings.PageSize</members>
         <name>CustomMetadata</name>
     </types>
      <types>
         <members>PayPal_Transaction__c</members>
+        <members>Setup_Customize_Data_Export</members>
         <name>CustomTab</name>
     </types>
     <types>
         <members>PayPal_Transaction__c</members>
         <members>Salesforce_PayPal_Transaction_Settings__mdt</members>
         <name>CustomObject</name>
+    </types>
+    <types>
+        <members>PayPal_Transaction_Integration_UtilityBar</members>
+        <members>Setup_Customize_Data_Export</members>
+        <name>FlexiPage</name>
     </types>
     <types>
         <members>PayPal_Transaction__c-PayPal Transaction Layout</members>

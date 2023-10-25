@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomApplication xmlns="http://soap.sforce.com/2006/04/metadata">
+    <brand>
+        <headerColor>#2BAEE1</headerColor>
+        <logo>paypal1</logo>
+        <logoVersion>1</logoVersion>
+        <shouldOverrideOrgTheme>false</shouldOverrideOrgTheme>
+    </brand>
+    <description>Salesforce PayPal Transaction Integration</description>
+    <formFactors>Small</formFactors>
+    <formFactors>Large</formFactors>
+    <isNavAutoTempTabsDisabled>false</isNavAutoTempTabsDisabled>
+    <isNavPersonalizationDisabled>false</isNavPersonalizationDisabled>
+    <isNavTabPersistenceDisabled>false</isNavTabPersistenceDisabled>
+    <label>PayPal Transaction Integration</label>
+    <navType>Standard</navType>
+    <tabs>Setup_Customize_Data_Export</tabs>
+    <tabs>PayPal_Transaction__c</tabs>
+    <uiType>Lightning</uiType>
+    <utilityBar>PayPal_Transaction_Integration_UtilityBar</utilityBar>
+</CustomApplication>

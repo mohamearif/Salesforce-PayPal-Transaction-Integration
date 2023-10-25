@@ -79,9 +79,11 @@ public with sharing class PayPalDataProcessorQueueable implements Queueable{
         wrapper.households = new Map<String, Account>();
         wrapper.contacts = new Map<String, Contact>();
         wrapper.paypalTransactions = new Map<String, PayPal_Transaction__c>();
+        List<String> includedTransactionStatus = getValues('IncludedTransactionStatus');
+        List<String> excludedTransactionEventCodes = getValues('ExcludedTransactionEventCodes');
         for (PayPalTransactionData.Transaction_details trans : transactions) {
             String contactIdentifier = getContactIdentifier(trans).toLowerCase();
-            if (!String.isEmpty(contactIdentifier) & trans.transaction_info.transaction_status == 'S' &  trans.transaction_info.transaction_event_code != 'T0400') { //bringing in only 'S' = successfull transactions into Salesforce and also avoid bringing in General withdrawal from PayPal account. 
+            if (!String.isEmpty(contactIdentifier) & includedTransactionStatus.contains(trans.transaction_info.transaction_status) &  !excludedTransactionEventCodes.contains(trans.transaction_info.transaction_event_code)) { //bringing in only 'S' = successfull transactions into Salesforce and also avoid bringing in General withdrawal from PayPal account. 
                 Contact c = new Contact();
                 Account a = new Account();
                 if (!transactionData.excludeAccountContactProcessing) {
@@ -392,6 +394,16 @@ public with sharing class PayPalDataProcessorQueueable implements Queueable{
         } else if(objectApiName == 'PayPal_Transaction__c') {
             paypalTransactionFieldLengths.put(fieldName, fieldLength);
         }
+    }
+
+    public static List<String> getValues(String developerName) {
+        String value = Salesforce_PayPal_Transaction_Settings__mdt.getInstance(developerName).Value__c;
+        List<String> values = new List<String>();
+        values = value.trim().split(';');
+        for (Integer i = 0; i < values.size(); i++) {
+            values[i] = values[i].trim();
+        }
+        return values;
     }
 
 }
