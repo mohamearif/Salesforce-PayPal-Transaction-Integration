@@ -75,7 +75,7 @@ Update the named credential 'PayPal_Named_Credential' with your PayPal account c
 
 1. **Assign the 'PayPal_Data_Permissions' Permission Set**: Assign the 'PayPal_Data_Permissions' permission set to users who need access to the 'PayPal_Transaction__c' tab/records. This permission set grants the necessary permissions for managing PayPal transactions within Salesforce.
 
-2. **Customize with Custom Metadata Type**:
+2. **Customize with Custom Metadata Type**: Use the 'Salesforce_PayPal_Transaction_Settings__mdt' Custom Metadata Type records to customize the below features.
 
     a. `AccountRecordTypeDeveloperName`: Set a specific Account Record Type when creating Account records during the export of PayPal Transactions to Salesforce.
 
@@ -90,6 +90,10 @@ Update the named credential 'PayPal_Named_Credential' with your PayPal account c
     So be sure to configure this setting accordingly to ensure a smooth integration, while keeping in mind that no Account/Contact Validations should disrupt the process.
 
     d. `PageSize`: Adjust the 'PageSize' to set the number of records exported per API call in the Queueable Apex. This allows you to control the size of each batch of records processed.
+
+    e. `ExcludedTransactionEventCodes`: Accepts semi-colon separated PayPal transaction event codes. Defaults to T0400 which to excludes exporting general withdrawal transactions. To add more event exclusions, please use event codes on the PayPal documentation: https://developer.paypal.com/docs/transaction-search/transaction-event-codes/.
+
+    f. `IncludedTransactionStatus`: Accepts semi-colon separated status. Defaults to S - successful transactions. Please use status values on the PayPal documentation: https://developer.paypal.com/docs/api/transaction-search/v1/#search_get!in=query&amp;path=transaction_status&amp;t=request.
 
 ### Step 7: Existing Data Export (Optional)
 
