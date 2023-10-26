@@ -9,6 +9,8 @@
         <members>PayPalDataSchedulerTest</members>
         <members>PayPalTransactionData</members>
         <members>PayPalTransactionDataTest</members>
+        <members>PostInstallClass</members>
+        <members>PostInstallClassTest</members>
         <name>ApexClass</name>
     </types>
     <types>
