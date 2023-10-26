@@ -7,7 +7,7 @@
 // THEN GO TO SETUP > APEX JOBS, AND MAKE SURE ALL THE JOBS ARE COMPLETE IF NOT LOOK AT THE LOGS TO MODIFY THE BELOW DATES ACCORDINGLY AND RUN AGAIN
 //***************************************************************************************************************/
 
-Datetime startDate = Date.newInstance(2020, 10, 01).addDays(1); //Specify the startDate to indicate the date from which you wish to begin migrating your PayPal transactions into Salesforce.
+Datetime startDate = Date.newInstance(2023, 10, 24).addDays(1); //Specify the startDate to indicate the date from which you wish to begin migrating your PayPal transactions into Salesforce.
 Datetime endDate = Date.newInstance(2023, 10, 31).addDays(1); //Specify the endDate to indicate the date at which you want to conclude the migration of your PayPal transactions to Salesforce.
 System.enqueueJob(new PayPalDataExportQueueable(
     true, startDate, endDate, 1, 200, 

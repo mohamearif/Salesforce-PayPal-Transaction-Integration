@@ -8,5 +8,5 @@ global class PostInstallClass implements InstallHandler {
             PayPalDataScheduler pds = new PayPalDataScheduler(); 
             System.schedule('PayPalDataScheduler - Everyday 3AM', everyDayAt3AM, pds);
         }
-      }
     }
+}

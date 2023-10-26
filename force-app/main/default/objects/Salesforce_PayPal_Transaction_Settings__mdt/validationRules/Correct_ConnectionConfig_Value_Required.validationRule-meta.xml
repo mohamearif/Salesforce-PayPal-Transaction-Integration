@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Correct_ConnectionConfig_Value_Required</fullName>
+    <active>true</active>
+    <errorConditionFormula>IF( DeveloperName == &apos;ConnectionConfig&apos;,
+IF( OR(Value__c = &apos;PayPal_Sandbox_Named_Credential&apos;, Value__c = &apos;PayPal_Named_Credential&apos;) , false, true),
+false)</errorConditionFormula>
+    <errorDisplayField>Value__c</errorDisplayField>
+    <errorMessage>Value should either be PayPal_Sandbox_Named_Credential or PayPal_Named_Credential</errorMessage>
+</ValidationRule>

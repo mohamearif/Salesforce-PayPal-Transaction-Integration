@@ -10,6 +10,14 @@ public class PayPalDataExportQueueable implements Queueable, Database.AllowsCall
     public DateTime sDateTime {get; set;}
     public DateTime eDateTime {get; set;}
 
+    private String selectedNamedCredential {
+        get {
+            String selectedNamedCredential = !String.isEmpty(Salesforce_PayPal_Transaction_Settings__mdt.getInstance('ConnectionConfig').Value__c) ? Salesforce_PayPal_Transaction_Settings__mdt.getInstance('ConnectionConfig').Value__c : 'PayPal_Sandbox_Named_Credential';
+            return selectedNamedCredential;
+        }
+        set;
+    }
+
     public PayPalDataExportQueueable(String sDateTime, String eDateTime, Integer currentPage, Integer pageSize, Boolean excludeAccountContactProcessing) {
         this.startDateStr = sDateTime;
         this.endDateStr = eDateTime;
@@ -35,7 +43,7 @@ public class PayPalDataExportQueueable implements Queueable, Database.AllowsCall
     public void execute(QueueableContext context) {
         try{
             // Construct the PayPal API endpoint and request headers
-            String endPointDomain = [SELECT Id, Endpoint, DeveloperName FROM NamedCredential Where DeveloperName = 'PayPal_Named_Credential' Limit 1].Endpoint;
+            String endPointDomain = [SELECT Id, Endpoint, DeveloperName FROM NamedCredential Where DeveloperName = :selectedNamedCredential Limit 1].Endpoint;
             endPointDomain = endPointDomain.split('.com/')[0]+'.com';
             String paypalApiEndpoint = endPointDomain + '/v1/reporting/transactions';
             String authHeader = 'Bearer ' + getPayPalAccessToken(); // Implement a method to get the access token
@@ -77,7 +85,7 @@ public class PayPalDataExportQueueable implements Queueable, Database.AllowsCall
                     System.enqueueJob(new PayPalDataProcessorQueueable(transactionData));
                 }
             } else {
-                PayPalDataProcessorQueueable.errorEmail('Error on PayPalDataExportQueueable', 'Error getting PayPal transactions');
+                PayPalDataProcessorQueueable.errorEmail('Error on PayPalDataExportQueueable', 'Error getting PayPal transactions \n \n Response Status: ' + String.valueOf(response.getStatusCode()) + '. \n \n Response Body: ' + response.getBody());
             }
         } catch(Exception ex) {
             PayPalDataProcessorQueueable.errorEmail('Error on PayPalDataExportQueueable', ex.getStackTraceString());
@@ -87,10 +95,8 @@ public class PayPalDataExportQueueable implements Queueable, Database.AllowsCall
     @testvisible
     private String getPayPalAccessToken() {
         // Implement logic to obtain and return the PayPal access token
-        String namedCredential = 'PayPal_Named_Credential'; // Replace with the API name of your named credential
-    
         HttpRequest request = new HttpRequest();
-        request.setEndpoint('callout:' + namedCredential); // Use callout to reference the named credential
+        request.setEndpoint('callout:' + selectedNamedCredential); // Use callout to reference the named credential
         request.setMethod('POST');
         request.setHeader('Accept', 'application/json');
         request.setHeader('Accept-Language', 'en_US');
@@ -105,7 +111,7 @@ public class PayPalDataExportQueueable implements Queueable, Database.AllowsCall
             return accessToken;
         } else {
             // Handle token retrieval error
-            PayPalDataProcessorQueueable.errorEmail('Error on PayPalDataExportQueueable', 'Error getting PayPal access token');
+            PayPalDataProcessorQueueable.errorEmail('Error on PayPalDataExportQueueable', 'Error getting PayPal access token \n \n Response Status: ' + String.valueOf(response.getStatusCode()) + '. \n \n Response Body: ' + response.getBody());
             return null;
         }
     }

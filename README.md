@@ -67,15 +67,34 @@ After deploying the integration, run the post-deployment script to schedule the 
 ```shell
 sfdx force:apex:execute -f scripts/apex/PostDeploymentScript.apex
 ```
-### Step 5: Named Credential Update
 
-Update the named credential 'PayPal_Named_Credential' with your PayPal account client ID and client secret from your PayPal sandbox. Ensure that your PayPal REST API App has access to Transactions.
+### Step 5: Org’s PayPal Connection Configuration (Required)
 
-### Step 6: Permission and Configuration
+Navigate to Setup > Custom Metadata Types > Click Manage Records on PayPal Transaction Integration Setting > Click Edit on ConnectionConfig record > Enter on Value textbox with either one of the below listed values
+  1. PayPal_Named_Credential
+  2. PayPal_Sandbox_Named_Credential
+PayPal_Named_Credential corresponds to PayPal Production Environment Endpoint Connection.
+PayPal_Sandbox_Named_Credential corresponds to PayPal Sandbox Environment Endpoint Connection.
+
+### Step 6: NamedCredential Update (Required)
+
+Navigate to Setup > Named Credentials > Click either PayPal_Named_Credential or PayPal_Sandbox_Named_Credential (based your above ConnectionConfig) > Edit > Enter values for the below fields  
+  1. Username: Client ID from your PayPal API Credentials.
+  2. Password: Secret key from your PayPal API Credentials.
+> Click Save
+Please check on your PayPal Account to make sure your PayPal API Credentials has the Transaction search access.
+
+### Step 7: Send Error Emails Configuration (Required)
+
+Navigate to Setup > Custom Metadata Types > Click Manage Records on PayPal Transaction Integration Setting > Click Edit on SendErrorEmailsTo record > Enter on Value textbox with the email addresses to whom you want to send error details in case of any exceptions. If not set, error details go to running user email.
+
+### Step 8: Permission and Configuration
 
 1. **Assign the 'PayPal_Data_Permissions' Permission Set**: Assign the 'PayPal_Data_Permissions' permission set to users who need access to the 'PayPal_Transaction__c' tab/records. This permission set grants the necessary permissions for managing PayPal transactions within Salesforce.
 
-2. **Customize with Custom Metadata Type**: Use the 'Salesforce_PayPal_Transaction_Settings__mdt' Custom Metadata Type records to customize the below features.
+2. **SharingRule Configuration (When necessary)**: The "PayPal_Transaction__c" object has private organization-wide sharing defaults. To provide access to the relevant user roles or groups, please establish custom sharing rules for PayPal_Transaction__c records.
+
+3. **Customize with Custom Metadata Type**: Use the 'Salesforce_PayPal_Transaction_Settings__mdt' Custom Metadata Type records to customize the below features.
 
     a. `AccountRecordTypeDeveloperName`: Set a specific Account Record Type when creating Account records during the export of PayPal Transactions to Salesforce.
 
@@ -95,7 +114,7 @@ Update the named credential 'PayPal_Named_Credential' with your PayPal account c
 
     f. `IncludedTransactionStatus`: Accepts semi-colon separated status. Defaults to S - successful transactions. Please use status values on the PayPal documentation: https://developer.paypal.com/docs/api/transaction-search/v1/#search_get!in=query&amp;path=transaction_status&amp;t=request.
 
-### Step 7: Existing Data Export (Optional)
+### Step 9: Existing Data Export (Optional)
 
 If you have existing transactions in your PayPal account that you want to export to Salesforce, follow these steps:
 

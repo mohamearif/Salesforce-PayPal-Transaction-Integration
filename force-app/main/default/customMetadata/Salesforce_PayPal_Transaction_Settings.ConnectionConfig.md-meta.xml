@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomMetadata xmlns="http://soap.sforce.com/2006/04/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <label>ConnectionConfig</label>
+    <protected>false</protected>
+    <values>
+        <field>Description__c</field>
+        <value xsi:type="xsd:string">Value Default to PayPal_Sandbox_Named_Credential. 
+
+Accepts either one of the below,
+
+1. PayPal_Named_Credential = PayPal Production Environment Connection.
+2. PayPal_Sandbox_Named_Credential = PayPal Sandbox Environment Connection.</value>
+    </values>
+    <values>
+        <field>Value__c</field>
+        <value xsi:type="xsd:string">PayPal_Sandbox_Named_Credential</value>
+    </values>
+</CustomMetadata>

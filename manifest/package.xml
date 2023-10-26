@@ -51,11 +51,13 @@
     <types>
         <members>Salesforce_PayPal_Transaction_Settings.AccountRecordTypeDeveloperName</members>
         <members>Salesforce_PayPal_Transaction_Settings.ContactRecordTypeDeveloperName</members>
+        <members>Salesforce_PayPal_Transaction_Settings.ConnectionConfig</members>
         <members>Salesforce_PayPal_Transaction_Settings.ExcludeAccountContact</members>
         <members>Salesforce_PayPal_Transaction_Settings.ExcludedTransactionEventCodes</members>
         <members>Salesforce_PayPal_Transaction_Settings.IncludedTransactionStatus</members>
         <members>Salesforce_PayPal_Transaction_Settings.KillCurrentDataMigrationFailSafe</members>
         <members>Salesforce_PayPal_Transaction_Settings.PageSize</members>
+        <members>Salesforce_PayPal_Transaction_Settings.SendErrorEmailsTo</members>
         <name>CustomMetadata</name>
     </types>
      <types>
@@ -80,6 +82,7 @@
     </types>
     <types>
         <members>PayPal_Named_Credential</members>
+        <members>PayPal_Sandbox_Named_Credential</members>
         <name>NamedCredential</name>
     </types>
     <types>

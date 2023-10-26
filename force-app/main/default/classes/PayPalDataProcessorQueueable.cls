@@ -344,7 +344,13 @@ public with sharing class PayPalDataProcessorQueueable implements Queueable{
         // Create a new SingleEmailMessage object
         Messaging.SingleEmailMessage email = new Messaging.SingleEmailMessage();
         // Set the email properties
-        email.setToAddresses(new String[] { [SELECT Email FROM User WHERE Profile.Name = 'System Administrator' AND isActive = True ORDER BY CreatedDate Asc LIMIT 1][0].Email }); // Set the recipient's email address
+        List<String> sendErrorEmailsTo = getValues('SendErrorEmailsTo');
+        if (sendErrorEmailsTo.isEmpty() || test.isRunningTest()) {
+            sendErrorEmailsTo.add(
+                UserInfo.getUserEmail()
+            );
+        }
+        email.setToAddresses(sendErrorEmailsTo); // Set the recipient's email address
         email.setSubject(context); // Set the email subject
         email.setPlainTextBody(errorMessage); // Set the plain text body
         // Send the email
@@ -399,9 +405,13 @@ public with sharing class PayPalDataProcessorQueueable implements Queueable{
     public static List<String> getValues(String developerName) {
         String value = Salesforce_PayPal_Transaction_Settings__mdt.getInstance(developerName).Value__c;
         List<String> values = new List<String>();
-        values = value.trim().split(';');
-        for (Integer i = 0; i < values.size(); i++) {
-            values[i] = values[i].trim();
+        if (!String.isBlank(value) && value.contains(';')) {
+            values = value.trim().split(';');
+            for (Integer i = 0; i < values.size(); i++) {
+                values[i] = values[i].trim();
+            }
+        } else if (!String.isBlank(value)) {
+            values.add(value.trim());
         }
         return values;
     }
