@@ -13,9 +13,7 @@ In addition, implementing record-based flow or trigger on 'PayPal_Transaction__c
   - [Step 2: Enable Custom Address Field in Salesforce Org](#step-2-enable-custom-address-field-in-salesforce-org)
   - [Step 3: Deploy the Integration](#step-3-deploy-the-integration)
   - [Step 4: Schedule the Data Retrieval](#step-4-schedule-the-data-retrieval)
-  - [Step 5: Named Credential Update](#step-5-named-credential-update)
-  - [Step 6: Permission and Configuration](#step-6-permission-and-configuration)
-  - [Step 7: Existing Data Export (Optional)](#step-7-existing-data-export-optional)
+  - [Step 5: Follow through the steps on Setup, Customize and Data Export Page internally on your salesforce org](#step-5-follow-through-the-rest-of-the-few-steps-on-setup-customize-and-data-export-page-internally-on-your-salesforce-org)
 
 ## Important Notes
 
@@ -68,58 +66,8 @@ After deploying the integration, run the post-deployment script to schedule the 
 sfdx force:apex:execute -f scripts/apex/PostDeploymentScript.apex
 ```
 
-### Step 5: Org’s PayPal Connection Configuration (Required)
+### Step 5: Follow through the rest of the few steps on Setup, Customize and Data Export Page internally on your salesforce org
 
-Navigate to Setup > Custom Metadata Types > Click Manage Records on PayPal Transaction Integration Setting > Click Edit on ConnectionConfig record > Enter on Value textbox with either one of the below listed values
-  1. PayPal_Named_Credential
-  2. PayPal_Sandbox_Named_Credential
-PayPal_Named_Credential corresponds to PayPal Production Environment Endpoint Connection.
-PayPal_Sandbox_Named_Credential corresponds to PayPal Sandbox Environment Endpoint Connection.
-
-### Step 6: NamedCredential Update (Required)
-
-Navigate to Setup > Named Credentials > Click either PayPal_Named_Credential or PayPal_Sandbox_Named_Credential (based your above ConnectionConfig) > Edit > Enter values for the below fields  
-  1. Username: Client ID from your PayPal API Credentials.
-  2. Password: Secret key from your PayPal API Credentials.
-> Click Save
-Please check on your PayPal Account to make sure your PayPal API Credentials has the Transaction search access.
-
-### Step 7: Send Error Emails Configuration (Required)
-
-Navigate to Setup > Custom Metadata Types > Click Manage Records on PayPal Transaction Integration Setting > Click Edit on SendErrorEmailsTo record > Enter on Value textbox with the email addresses to whom you want to send error details in case of any exceptions. If not set, error details go to running user email.
-
-### Step 8: Permission and Configuration
-
-1. **Assign the 'PayPal_Data_Permissions' Permission Set**: Assign the 'PayPal_Data_Permissions' permission set to users who need access to the 'PayPal_Transaction__c' tab/records. This permission set grants the necessary permissions for managing PayPal transactions within Salesforce.
-
-2. **SharingRule Configuration (When necessary)**: The "PayPal_Transaction__c" object has private organization-wide sharing defaults. To provide access to the relevant user roles or groups, please establish custom sharing rules for PayPal_Transaction__c records.
-
-3. **Customize with Custom Metadata Type**: Use the 'Salesforce_PayPal_Transaction_Settings__mdt' Custom Metadata Type records to customize the below features.
-
-    a. `AccountRecordTypeDeveloperName`: Set a specific Account Record Type when creating Account records during the export of PayPal Transactions to Salesforce.
-
-    b. `ContactRecordTypeDeveloperName`: Set a specific Contact Record Type when creating Contact records during the export of PayPal Transactions to Salesforce.
-
-    c. `ExcludeAccountContact`: This feature provides the flexibility to prevent the creation of unnecessary accounts and contacts when exporting PayPal Transactions to Salesforce. By default, this setting is configured to exclude such creations. It is important to adjust this setting to align with your specific requirements, considering the following mappings:
-
-    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`For Account creation,` the fields that are mapped for insertion include Name, Shipping Address, and Billing Address.
-
-    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`For Contact creation,` the fields that are mapped for insertion include FirstName, LastName, Email, Mailing Address, and Other Address.
-    
-    So be sure to configure this setting accordingly to ensure a smooth integration, while keeping in mind that no Account/Contact Validations should disrupt the process.
-
-    d. `PageSize`: Adjust the 'PageSize' to set the number of records exported per API call in the Queueable Apex. This allows you to control the size of each batch of records processed.
-
-    e. `ExcludedTransactionEventCodes`: Accepts semi-colon separated PayPal transaction event codes. Defaults to T0400 which excludes exporting general withdrawal transactions. To add more event exclusions, please use event codes on the PayPal documentation: https://developer.paypal.com/docs/transaction-search/transaction-event-codes/.
-
-    f. `IncludedTransactionStatus`: Accepts semi-colon separated status. Defaults to S - successful transactions. Please use status values on the PayPal documentation: https://developer.paypal.com/docs/api/transaction-search/v1/#search_get!in=query&amp;path=transaction_status&amp;t=request.
-
-### Step 9: Existing Data Export (Optional)
-
-If you have existing transactions in your PayPal account that you want to export to Salesforce, follow these steps:
-
-1. Open the file 'scripts/apex/ExistingDataExportToSalesforce.apex' in this project.
-2. Review the instructions provided at the top section of the file. It contains guidance on how to export existing PayPal transactions to Salesforce.
-3. Execute the necessary Apex code within the file to initiate the export process.
-
-Please note that this step is optional and applies to cases where you have historical data in your PayPal account that you want to bring into Salesforce.
+  1. Setup section (Required): PayPal Connection Configuration, NamedCredential and Send Error Emails Configuration Setup.
+  2. Customize section (Optional): Learn the available customize options and possibly customize according to you need.
+  3. Data Export section (Optional): If you have existing transactions in your PayPal account that you want to export to Salesforce then follow those steps.
