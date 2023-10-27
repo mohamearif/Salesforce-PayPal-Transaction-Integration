@@ -68,6 +68,6 @@ sfdx force:apex:execute -f scripts/apex/PostDeploymentScript.apex
 
 ### Step 5: Follow through the rest of the few steps on Setup, Customize and Data Export Page internally on your salesforce org
 
-  1. Setup section (Required): PayPal Connection Configuration, NamedCredential and Send Error Emails Configuration Setup.
-  2. Customize section (Optional): Learn the available customize options and possibly customize according to you need.
-  3. Data Export section (Optional): If you have existing transactions in your PayPal account that you want to export to Salesforce then follow those steps.
+  1. Setup Section (Required): PayPal Connection Configuration, NamedCredential and Send Error Emails Configuration Setup.
+  2. Customize Section (Optional): Learn the available customize options and possibly customize according to you need.
+  3. Data Export Section (Optional): If you have existing transactions in your PayPal account that you want to export to Salesforce then follow those steps.
