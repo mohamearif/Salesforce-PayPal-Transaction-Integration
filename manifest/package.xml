@@ -98,5 +98,9 @@
         <members>Paypal_Transaction_Data</members>
         <name>StaticResource</name>
     </types>
+    <types>
+        <members>CustomAddressField</members>
+        <name>Settings</name>
+    </types>
     <version>58.0</version>
 </Package>
