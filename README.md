@@ -56,7 +56,7 @@ Before deploying the integration, ensure you have enabled the custom address fie
 Deploy the PayPal Transaction Integration using the provided `package.xml` file in the manifest folder of this project. Run the test classes to ensure everything works correctly before deploying it to your production environment.
 
 ```shell
-sfdx force:source:deploy --manifest manifest/package.xml -l RunSpecifiedTests -r PayPalDataExportQueueableTest PayPalDataProcessorQueueableTest PayPalDataSchedulerTest PayPalTransactionDataTest
+sf project deploy start --manifest manifest/package.xml -l RunSpecifiedTests -t PayPalDataExportQueueableTest PayPalDataProcessorQueueableTest PayPalDataSchedulerTest PayPalTransactionDataTest PostInstallClassTest
 ```
 ### Step 4: Schedule the Data Retrieval
 
